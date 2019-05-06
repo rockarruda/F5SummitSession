@@ -1,8 +1,13 @@
 # F5SummitSession
 Materials from PowerShell Summit 2019 Session
 
-I have uploaded the presentation slides and my examples I used in my demo for the Summit.  I will have my recorded demo up later this evening on youtube and will provide the link in this readme.  Please don't hesitate to contact me with any questions, and thanks again for not going to the other sessions :-).
+I have uploaded the presentation slides and my examples I used in my demo for the Summit.  Recorded demo is up on Youtube below.  Please don't hesitate to contact me with any questions, and thanks again for not going to the other sessions :-).
 
+F5 AS3 Repo location for downloads:
+https://github.com/F5Networks/f5-appsvcs-extension
+
+Recorded Demo:
+https://youtu.be/tsGpCOEBGwM
 
 Below are some references to F5 documentation for the AS3:
 
