@@ -1,0 +1,68 @@
+{
+    "$schema": "https://raw.githubusercontent.com/F5Networks/f5-appsvcs-extension/master/schema/latest/as3-schema-3.10.0-5.json",
+    "class": "AS3",
+    "action": "deploy",
+    "persist": true,
+    "declaration": {
+       "class": "ADC",
+       "schemaVersion": "3.0.0",
+       "id": "#{AS3Guid}",
+       "label": "Application Config Test",
+       "remark": "Simple HTTP application with RR pool",
+       "#{ApplicationName}_#{EnvironmentType}": {
+          "class": "Tenant",
+          "#{ApplicationName}": {
+             "class": "Application",
+             "template": "generic",
+             "#{ApplicationName}": {
+                 "class": "Service_HTTPS",
+                 "serverTLS": "#{ApplicationName}SSL",
+                 "virtualAddresses": [
+                     "#{AppVIP}"
+                 ],
+                 "pool": "#{EnvironmentType}_#{ProjectType}_#{ApplicationName}_443",
+                 "profileTCP": "normal",
+                "iRules": [
+                    "#{ApplicationName}iRule"
+                ]
+             },
+             "#{EnvironmentType}_#{ProjectType}_#{ApplicationName}_443": {
+                 "class": "Pool",
+                 "monitors": [
+                     "http"
+                 ],
+                 "members": [
+                    {
+                        "servicePort": 443,
+                        "serverAddresses": [
+                           "#{NodeATentacleIP}",
+                           "#{NodeBTentacleIP}"     
+                        ],
+                        "shareNodes": true
+                    }
+                ]
+             },
+            "#{ApplicationName}SSL": {
+                "class": "TLS_Server",
+                "certificates": [
+                    {
+                        "certificate": "#{EnvironmentType}_#{ProjectType}_#{ApplicationName}"
+                    }
+                ]
+            },
+            "#{EnvironmentType}_#{ProjectType}_#{ApplicationName}": {
+                "class": "Certificate",
+                "remark": "Testing adding a cert",
+                "certificate": "#{certvariable}",
+                "privateKey": "#{privatekeyvariable}"
+            },
+            "#{ApplicationName}iRule": {
+                "class": "iRule",
+                "remark": "choose PoolDev based on header",
+                "iRule": "when HTTP_REQUEST {\n switch [string tolower [HTTP::host]]\n {\n \"#{EnvironmentType}_#{ProjectType}_#{ApplicationName}\" {\n pool #{EnvironmentType}_#{ProjectType}_#{ApplicationName}_443 \n } \n \n } \n}",
+                "expand": true
+            }
+          }
+       }
+    }
+ }
